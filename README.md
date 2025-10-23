@@ -1,4 +1,4 @@
-# Employee Task Management System
+# Task Log
 
 This is a code bundle for Employee Task Management System. The original project is available at https://www.figma.com/design/CdIGSp4uWHXefTHkMTTSbe/Employee-Task-Management-System.
 
