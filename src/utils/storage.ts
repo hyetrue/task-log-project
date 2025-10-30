@@ -116,7 +116,7 @@ export function loadTasks(): Task[] {
     console.error('❌ 업무 데이터 로드 실패:', error);
   }
 
-  // 초기 데이터 저장
+  // localStorage에서 데이터가 없으면 초기 데이터 저장
   console.log('📝 초기 업무 데이터 생성 중...');
   saveTasks(INITIAL_TASKS);
   return INITIAL_TASKS;
@@ -194,6 +194,7 @@ export function deleteTask(taskId: string): boolean {
   const filtered = tasks.filter((t) => t.id !== taskId);
 
   if (filtered.length === tasks.length) {
+    // 길이가 같다 = 삭제할 게 없었다
     console.error('❌ 삭제할 업무를 찾을 수 없음:', taskId);
     return false;
   }
@@ -205,13 +206,19 @@ export function deleteTask(taskId: string): boolean {
 export function downloadTasksAsJson(): void {
   const tasks = loadTasks();
   const jsonData = JSON.stringify(tasks, null, 2);
+
+  // 1. Blob 생성 (파일 데이터)
   const blob = new Blob([jsonData], { type: 'application/json' });
+  // 2. Blob URL 생성
   const url = URL.createObjectURL(blob);
+  // 3. <a> 태그 생성
   const link = document.createElement('a');
   link.href = url;
   link.download = `tasks_${new Date().toISOString().split('T')[0]}.json`;
+  // 4. DOM에 추가하고 클릭
   document.body.appendChild(link);
   link.click();
+  // 5. 정리 (메모리 해제)
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
   console.log('📥 JSON 파일 다운로드 완료');
